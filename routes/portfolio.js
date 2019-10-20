@@ -29,8 +29,8 @@ router.post('/add-portfolio', async function(req, res, next) {
 router.post('/add-fund', async function(req, res, next) {
 
     let funds = new Funds();
-    funds.name = req.body.funds.company;
-    funds.description = req.body.funds.allocation;
+    funds.name = req.body.funds.name;
+    funds.description = req.body.funds.description;
     funds.rating = req.body.funds.rating;
     funds.productFee = req.body.funds.productFee;
     funds.risk = req.body.funds.risk;
@@ -81,5 +81,69 @@ router.post('/add', function(req, res, next) {
       res.send({err: true});
   }
 });
+
+var request = require('request');
+function removeDups(names) {
+    let unique = {};
+    names.forEach(function(i) {
+      if(!unique[i]) {
+        unique[i] = true;
+      }
+    });
+    return Object.keys(unique);
+  }
+funds_array = [];
+add_portfolio = function(objects, callback){
+    callback();
+    /*if(objects.length > 0){
+        console.log(objects[0])
+    request.post({
+        url: 'http://178.62.4.215/portfolio/add-portfolio',
+        body: {portfolio: objects[0] },
+        json: true
+    }, function(err, http, body){
+        console.log(body);
+        objects.shift();
+        add_portfolio(objects, callback);
+    });
+    }else{
+        callback();
+    }*/
+}
+
+add_fund = function(funds, callback){
+    
+    if(typeof funds[0] !== "undefined"){
+        request.post({
+            url: 'http://178.62.4.215/portfolio/add-fund',
+            body: {funds: funds[0] },
+            json: true
+        }, function(err, http, body){
+            console.log(body);
+            funds.shift();
+            add_fund(funds, callback);
+        });
+        }else{
+            callback();
+        }
+};
+dbModel.find({}).exec(function(err, obj){
+    for(var i = 0; i < obj.length; i++){
+        for(var k = 0; k < obj[i].company.length; k++){
+            funds_array.push(
+                obj[i].company[k]
+            );
+        }
+    }
+    funds_array = removeDups(funds_array);
+    add_portfolio(obj, function(){
+        Funds.find({name: {"$in": funds_array} }).exec(function(e, funds){
+            add_fund(funds, function(){
+                console.log("done");
+            })
+        });
+    });
+});
+
 
 module.exports = router;
