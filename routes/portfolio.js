@@ -82,6 +82,7 @@ router.post('/add', function(req, res, next) {
   }
 });
 
+/*
 var request = require('request');
 function removeDups(names) {
     let unique = {};
@@ -95,10 +96,10 @@ function removeDups(names) {
 funds_array = [];
 add_portfolio = function(objects, callback){
     callback();
-    /*if(objects.length > 0){
+    if(objects.length > 0){
         console.log(objects[0])
     request.post({
-        url: 'http://178.62.4.215/portfolio/add-portfolio',
+        url: '',
         body: {portfolio: objects[0] },
         json: true
     }, function(err, http, body){
@@ -108,14 +109,14 @@ add_portfolio = function(objects, callback){
     });
     }else{
         callback();
-    }*/
+    }
 }
 
 add_fund = function(funds, callback){
     
     if(typeof funds[0] !== "undefined"){
         request.post({
-            url: 'http://178.62.4.215/portfolio/add-fund',
+            url: '',
             body: {funds: funds[0] },
             json: true
         }, function(err, http, body){
@@ -145,5 +146,5 @@ dbModel.find({}).exec(function(err, obj){
     });
 });
 
-
+*/
 module.exports = router;
