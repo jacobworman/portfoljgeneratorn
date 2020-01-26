@@ -44,8 +44,9 @@ router.post('/add-fund', async function(req, res, next) {
 
 router.post('/get', async function(req, res, next) {
     console.log("Reciving..");
-    const alt = req.body.alt;
+    let alt = req.body.alt;
     console.log(alt)
+    alt = alt.replace("undefined", "")
     if(typeof alt !== "undefined"){
         const obj = await dbModel.findOne({alt: alt}).exec();
         if(obj){
